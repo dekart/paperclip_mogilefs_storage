@@ -6,9 +6,11 @@ module Paperclip
       end
 
       def mogilefs_key_exist?(key)
-        mogilefs.list_keys(key).is_a?(Array)
+        mogilefs.get_paths(key).any?
+      rescue MogileFS::Backend::UnknownKeyError
+        return false
       end
-      
+
       def exists?(style = default_style)
         mogilefs_key_exist?(url(style))
       end
