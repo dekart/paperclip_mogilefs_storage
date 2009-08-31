@@ -22,7 +22,7 @@ module Paperclip
 
       def flush_writes #:nodoc:
         @queued_for_write.each do |style, file|
-          Paperclip.log("[paperclip] saving #{url(style)} to MogileFS")
+          Paperclip.log("Saving #{url(style)} to MogileFS")
           
           mogilefs.store_file(url(style), mogilefs_class, file)
         end
@@ -31,12 +31,12 @@ module Paperclip
 
       def flush_deletes #:nodoc:
         @queued_for_delete.each do |path|
-          Paperclip.log("[paperclip] deleting #{path} from MogileFS")
+          Paperclip.log("Deleting #{path} from MogileFS")
 
           begin
             mogilefs.delete(path)
           rescue MogileFS::Backend::UnknownKeyError
-            Paperclip.log("[paperclip] Error: #{path} not found in MogileFS")
+            Paperclip.log("Error: #{path} not found in MogileFS")
           end
         end
         @queued_for_delete = []
