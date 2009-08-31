@@ -16,7 +16,7 @@ module Paperclip
       end
 
       def to_file style = default_style
-        @queued_for_write[style] || StringIO.new(mogilefs.get_file_data(path(style)))
+        @queued_for_write[style] || StringIO.new(mogilefs.get_file_data(url(style)))
       end
       alias_method :to_io, :to_file
 
