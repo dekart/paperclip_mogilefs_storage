@@ -36,15 +36,21 @@ module Paperclip
       alias_method :to_io, :to_file
 
       def flush_writes #:nodoc:
-        @queued_for_write.each do |style, file|
+        @queued_for_write.each do |style, io|
           Paperclip.log("Saving #{url(style)} to MogileFS")
 
           begin
             retry_on_broken_socket do
-              mogilefs.store_file(url(style), mogilefs_class, file)
+              begin
+                io.open if io.closed? # Reopen IO to avoid empty_file error
+
+                mogilefs.store_file(url(style), mogilefs_class, io)
+              ensure
+                io.close
+              end
             end
           ensure
-            file.close
+            io.close
           end
         end
         @queued_for_write = {}
